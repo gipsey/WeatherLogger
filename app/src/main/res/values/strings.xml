@@ -1,3 +1,21 @@
 <resources>
-    <string name="app_name">WeatherLogger</string>
+    <string name="app_name">Your Weather Data</string>
+
+    <string name="location_access_dialog_title">Granting location access</string>
+
+    <string name="location_access_dialog_message">In order to show the weather for your current location, the app must have your permission to access location services.\nDo you agree to share your location with the app ?</string>
+    <string name="location_access_dialog_settings">Since access to your current location was denied, you can grant your permission only in our app\'s settings page.</string>
+
+    <string name="cancel">Cancel</string>
+    <string name="agree">Agree</string>
+    <string name="settings">Settings</string>
+    <string name="load">Load</string>
+
+    <string name="temperature">Temperature:</string>
+    <string name="temperature_values">%.1f °C</string>
+
+    <string name="error_loading">Data could not be loaded. Try again later.</string>
+    <string name="error_general">Something wrong happened.\nPlease try again.</string>
+    <string name="location_settings_error">Unfortunately location settings cannot be managed at the moment.\nPlease try enabling you GPS by yourself.</string>
+    <string name="location_settings_denied_error">Location settings was not enabled.\nLet\'s try that again, when you will be open to enable GPS.</string>
 </resources>
