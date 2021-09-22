@@ -3,7 +3,6 @@ package edu.davidd.weatherlogger.framework
 import android.annotation.SuppressLint
 import android.app.Application
 import android.util.Log
-import androidx.multidex.MultiDex
 import edu.davidd.weatherlogger.BuildConfig
 import edu.davidd.weatherlogger.data.dataDiModule
 import edu.davidd.weatherlogger.domain.domainDiModule
@@ -15,9 +14,9 @@ import org.koin.core.logger.Level
 import timber.log.Timber
 
 class WeatherLoggerApp : Application() {
+
     override fun onCreate() {
         super.onCreate()
-        MultiDex.install(this)
 
         Timber.plant(if (BuildConfig.DEBUG) Timber.DebugTree() else TimberReleaseTree())
 
