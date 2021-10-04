@@ -4,6 +4,7 @@
     package="edu.davidd.weatherlogger">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
@@ -18,11 +19,24 @@
         tools:ignore="UnusedAttribute">
 
         <activity
-            android:name=".framework.ui.MainActivity"
-            android:exported="true">
+            android:name=".framework.ui.xml.MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.MaterialComponents.DayNight">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".framework.ui.compose.MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.MaterialComponents.DayNight">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 

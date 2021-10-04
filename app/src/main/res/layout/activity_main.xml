@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".framework.ui.MainActivity">
+    tools:context=".framework.ui.xml.MainActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
@@ -22,9 +22,9 @@
         style="@style/Widget.Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/lateral_margin"
+        android:layout_marginLeft="@dimen/horizontal_margin"
         android:layout_marginTop="@dimen/vertical_margin"
-        android:layout_marginRight="@dimen/lateral_margin"
+        android:layout_marginRight="@dimen/horizontal_margin"
         android:layout_marginBottom="@dimen/vertical_margin"
         android:text="@string/load"
         app:layout_constraintBottom_toBottomOf="parent"

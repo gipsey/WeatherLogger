@@ -8,6 +8,7 @@ import edu.davidd.weatherlogger.domain.model.WeatherData
 import edu.davidd.weatherlogger.domain.usecase.DownloadDataForLocation
 import edu.davidd.weatherlogger.domain.usecase.LoadDataHistory
 import edu.davidd.weatherlogger.framework.location.LocationProvider
+import timber.log.Timber
 
 class MainViewModel(
     private val locationProvider: LocationProvider,
@@ -21,8 +22,8 @@ class MainViewModel(
     private val _onLocationUnavailable = MutableLiveData<Boolean>()
     val onLocationUnavailable: LiveData<Boolean> = _onLocationUnavailable
 
-    private val _messageResId = MutableLiveData<Int>()
-    val messageResId: LiveData<Int> = _messageResId
+    private val _message = MutableLiveData<UiEvent<UiMessage>>()
+    val uiMessage: LiveData<UiEvent<UiMessage>> = _message
 
     fun requestLocationUpdates() {
         locationProvider.request(
@@ -38,7 +39,7 @@ class MainViewModel(
         loadDataHistory(Unit) { result ->
             result.either(
                 {
-                    _messageResId.value = R.string.error_loading
+                    onError()
                 },
                 {
                     _data.value = it
@@ -51,12 +52,17 @@ class MainViewModel(
         downloadDataForLocation(DownloadDataForLocation.Params(latitude, longitude)) { result ->
             result.either(
                 {
-                    _messageResId.value = R.string.error_loading
+                    onError()
                 },
                 {
                     loadDataHistory()
                 }
             )
         }
+    }
+
+    private fun onError() {
+        Timber.d("onError")
+        _message.value = UiEvent(UiMessage(R.string.error_loading))
     }
 }

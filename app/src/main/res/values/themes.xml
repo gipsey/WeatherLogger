@@ -18,9 +18,9 @@
         <item name="android:textColor">@color/text</item>
         <item name="android:textAppearance">@style/TextAppearance.ItemText</item>
         <item name="android:maxLines">2</item>
-        <item name="android:paddingLeft">@dimen/lateral_margin_25</item>
+        <item name="android:paddingLeft">@dimen/horizontal_margin_25</item>
         <item name="android:paddingTop">@dimen/vertical_margin_25</item>
-        <item name="android:paddingRight">@dimen/lateral_margin_25</item>
+        <item name="android:paddingRight">@dimen/horizontal_margin_25</item>
         <item name="android:paddingBottom">@dimen/vertical_margin_25</item>
     </style>
 

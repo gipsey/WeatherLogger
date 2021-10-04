@@ -13,7 +13,8 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.core.content.ContextCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import edu.davidd.weatherlogger.R
-import edu.davidd.weatherlogger.framework.ui.MessageAction
+import edu.davidd.weatherlogger.framework.ui.UiMessage
+import edu.davidd.weatherlogger.framework.ui.UiMessageAction
 import edu.davidd.weatherlogger.framework.ui.showMessage
 
 class LocationHandlerForPermission {
@@ -42,17 +43,19 @@ class LocationHandlerForPermission {
 
     fun showSettingsMessage(view: View) =
         view.showMessage(
-            R.string.location_access_dialog_settings,
-            MessageAction(
-                R.string.settings
-            ) {
-                it.context.startActivity(
-                    Intent().apply {
-                        action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-                        data = Uri.fromParts("package", it.context.packageName, null)
-                    }
-                )
-            }
+            UiMessage(
+                R.string.location_access_dialog_settings,
+                UiMessageAction(
+                    R.string.settings
+                ) {
+                    it.startActivity(
+                        Intent().apply {
+                            action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                            data = Uri.fromParts("package", it.packageName, null)
+                        }
+                    )
+                }
+            )
         )
 
     companion object {

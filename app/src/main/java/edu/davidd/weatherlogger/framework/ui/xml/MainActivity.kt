@@ -1,4 +1,4 @@
-package edu.davidd.weatherlogger.framework.ui
+package edu.davidd.weatherlogger.framework.ui.xml
 
 import android.app.Activity
 import android.os.Bundle
@@ -10,7 +10,10 @@ import edu.davidd.weatherlogger.R
 import edu.davidd.weatherlogger.databinding.ActivityMainBinding
 import edu.davidd.weatherlogger.framework.location.LocationHandlerForPermission
 import edu.davidd.weatherlogger.framework.location.LocationHandlerForSettings
+import edu.davidd.weatherlogger.framework.ui.MainViewModel
+import edu.davidd.weatherlogger.framework.ui.UiMessage
 import edu.davidd.weatherlogger.framework.ui.model.WeatherDataListMapper
+import edu.davidd.weatherlogger.framework.ui.showMessage
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -45,8 +48,8 @@ class MainActivity : AppCompatActivity() {
         viewModel.onLocationUnavailable.observe(this) {
             if (it) validateLocationPermission()
         }
-        viewModel.messageResId.observe(this) {
-            binding.root.showMessage(it)
+        viewModel.uiMessage.observe(this) {
+            it.getContentIfNotHandled()?.let { binding.root.showMessage(it) }
         }
 
 
@@ -70,7 +73,7 @@ class MainActivity : AppCompatActivity() {
             if (it.resultCode == Activity.RESULT_OK)
                 onLocationAccessEnabled()
             else
-                binding.root.showMessage(R.string.location_settings_denied_error)
+                binding.root.showMessage(UiMessage(R.string.location_settings_denied_error))
         }
 
     private fun validateLocationPermission() =
@@ -91,7 +94,7 @@ class MainActivity : AppCompatActivity() {
                 is LocationHandlerForSettings.Result.ResolutionRequired ->
                     locationHandlerForSettings.launchRequest(locationSettingsResultLauncher, result.exception.resolution)
                 is LocationHandlerForSettings.Result.Error ->
-                    binding.root.showMessage(result.messageResId)
+                    binding.root.showMessage(UiMessage(result.messageResId))
                 LocationHandlerForSettings.Result.Available ->
                     onLocationAccessEnabled()
             }

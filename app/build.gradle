@@ -1,7 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
-    id 'org.jetbrains.kotlin.plugin.serialization'  version '1.5.0'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.5.0'
 }
 
 android {
@@ -28,6 +28,7 @@ android {
 
     buildFeatures {
         viewBinding true
+        compose true
     }
 
     compileOptions {
@@ -35,27 +36,46 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    composeOptions {
+        kotlinCompilerExtensionVersion = compose_version
+        kotlinCompilerVersion = kotlin
+    }
+
     kotlinOptions {
         jvmTarget = '1.8'
+        useIR = true
     }
 }
 
 dependencies {
-    implementation 'androidx.core:core-ktx:1.5.0'
-    implementation 'com.google.android.material:material:1.3.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    implementation 'androidx.activity:activity-ktx:1.2.3'
+    implementation 'androidx.core:core-ktx:1.6.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
+    implementation 'androidx.activity:activity-ktx:1.3.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'
-    implementation 'com.google.android.gms:play-services-location:18.0.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
     implementation 'androidx.preference:preference-ktx:1.1.1'
+
+    implementation "androidx.compose.ui:ui:$compose_version"
+    implementation "androidx.compose.material:material:$compose_version"
+    implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
+    debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
+    debugImplementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
+    debugImplementation "androidx.compose.ui:ui-tooling-data:$compose_version"
+    implementation 'androidx.activity:activity-compose:1.3.1'
+    implementation "androidx.constraintlayout:constraintlayout-compose:1.0.0-rc01"
+
+    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'com.google.android.gms:play-services-location:18.0.0'
 
     implementation 'com.jakewharton.timber:timber:4.7.1'
     implementation 'io.insert-koin:koin-android:3.0.2'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2'
     implementation 'com.squareup.moshi:moshi-kotlin:1.12.0'
 
     implementation 'io.ktor:ktor-client-okhttp:1.6.0'
     implementation 'io.ktor:ktor-client-json:1.6.0'
     implementation 'io.ktor:ktor-client-serialization:1.6.0'
     implementation 'io.ktor:ktor-client-logging-jvm:1.6.0'
+
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
 }

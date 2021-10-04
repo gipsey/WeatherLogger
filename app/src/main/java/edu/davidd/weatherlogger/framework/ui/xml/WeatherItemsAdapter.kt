@@ -1,4 +1,4 @@
-package edu.davidd.weatherlogger.framework.ui
+package edu.davidd.weatherlogger.framework.ui.xml
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

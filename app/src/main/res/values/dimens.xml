@@ -18,13 +18,13 @@
     <dimen name="vertical_margin_50">8dp</dimen>
     <dimen name="vertical_margin_25">4dp</dimen>
 
-    <dimen name="lateral_margin_200">36dp</dimen>
-    <dimen name="lateral_margin_125">22dp</dimen>
-    <dimen name="lateral_margin">18dp</dimen>
-    <dimen name="lateral_margin_75">13.5dp</dimen>
-    <dimen name="lateral_margin_66">12dp</dimen>
-    <dimen name="lateral_margin_50">9dp</dimen>
-    <dimen name="lateral_margin_25">4.5dp</dimen>
+    <dimen name="horizontal_margin_200">36dp</dimen>
+    <dimen name="horizontal_margin_125">22dp</dimen>
+    <dimen name="horizontal_margin">18dp</dimen>
+    <dimen name="horizontal_margin_75">13.5dp</dimen>
+    <dimen name="horizontal_margin_66">12dp</dimen>
+    <dimen name="horizontal_margin_50">9dp</dimen>
+    <dimen name="horizontal_margin_25">4.5dp</dimen>
 
     <dimen name="corner">16dp</dimen>
 </resources>
