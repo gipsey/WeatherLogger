@@ -2,15 +2,14 @@ package edu.davidd.weatherlogger.framework.ui
 
 import android.widget.Toast
 import androidx.compose.foundation.focusable
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
@@ -45,8 +44,12 @@ internal fun Main(
         val coroutineScope = rememberCoroutineScope()
         AppSnackBar(scaffoldState.snackbarHostState, coroutineScope, uiMessageLiveData.observeAsState().value)
 
-        Scaffold(scaffoldState = scaffoldState) {
-            ConstraintLayout(modifier = Modifier.fillMaxSize()) {
+        Scaffold(scaffoldState = scaffoldState) { innerPadding ->
+            ConstraintLayout(
+                Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+            ) {
                 Timber.d("Main - WeatherLoggerTheme - ConstraintLayout")
 
                 val itemList = weatherDataListMapper(LocalContext.current, viewModel.data.observeAsState(emptyList()).value)
@@ -109,8 +112,8 @@ fun WeatherRow(item: WeatherItem = WeatherItem("2021.10.01", "26 C", "Brussels")
         Timber.d("WeatherRow - $item - Card")
         ConstraintLayout(
             modifier = Modifier
-                .padding(dimensionResource(R.dimen.margin))
                 .fillMaxWidth()
+                .padding(dimensionResource(R.dimen.margin))
         ) {
             Timber.d("WeatherRow - $item - Card - ConstraintLayout")
             val (temperatureLabel, temperature, date, location) = createRefs()
@@ -159,6 +162,64 @@ fun WeatherRow(item: WeatherItem = WeatherItem("2021.10.01", "26 C", "Brussels")
                 style = MaterialTheme.typography.body1,
                 maxLines = 2
             )
+        }
+    }
+}
+
+@Preview
+@Composable
+fun WeatherRow2(item: WeatherItem = WeatherItem("2021.10.01", "26 C", "Brussels")) {
+    Timber.d("WeatherRow2 - $item")
+
+    Card(
+        modifier = Modifier
+            .padding(dimensionResource(R.dimen.margin))
+            .fillMaxWidth()
+            .focusable(true),
+        elevation = 8.dp,
+        shape = AppShape.Corner
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(dimensionResource(R.dimen.margin))
+        ) {
+            Row {
+                Text(
+                    text = stringResource(R.string.temperature),
+                    modifier = Modifier
+                        .padding(horizontal = dimensionResource(R.dimen.margin_50), vertical = dimensionResource(R.dimen.margin_50)),
+                    style = MaterialTheme.typography.body1,
+                    maxLines = 2
+                )
+                Text(
+                    text = item.temperature,
+                    modifier = Modifier
+                        .padding(vertical = dimensionResource(R.dimen.margin_50)),
+                    style = MaterialTheme.typography.body1,
+                    maxLines = 2
+                )
+            }
+
+            Box(modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    text = item.date,
+                    modifier = Modifier
+                        .align(Alignment.CenterStart)
+                        .padding(horizontal = dimensionResource(R.dimen.margin_50), vertical = dimensionResource(R.dimen.margin_50)),
+                    style = MaterialTheme.typography.body1,
+                    maxLines = 2
+                )
+
+                Text(
+                    text = item.location,
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .padding(horizontal = dimensionResource(R.dimen.margin_50), vertical = dimensionResource(R.dimen.margin_50)),
+                    style = MaterialTheme.typography.body1,
+                    maxLines = 2
+                )
+            }
         }
     }
 }
