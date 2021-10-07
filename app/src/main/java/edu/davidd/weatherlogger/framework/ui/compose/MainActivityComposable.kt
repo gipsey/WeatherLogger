@@ -1,10 +1,13 @@
 package edu.davidd.weatherlogger.framework.ui
 
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -19,7 +22,10 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.lifecycle.LiveData
+import coil.compose.rememberImagePainter
 import edu.davidd.weatherlogger.R
+import edu.davidd.weatherlogger.framework.ui.compose.AppColumn
+import edu.davidd.weatherlogger.framework.ui.compose.firstBaselineToTop
 import edu.davidd.weatherlogger.framework.ui.compose.theme.AppShape
 import edu.davidd.weatherlogger.framework.ui.compose.theme.AppTextStyle
 import edu.davidd.weatherlogger.framework.ui.compose.theme.WeatherLoggerTheme
@@ -45,54 +51,103 @@ internal fun Main(
         AppSnackBar(scaffoldState.snackbarHostState, coroutineScope, uiMessageLiveData.observeAsState().value)
 
         Scaffold(scaffoldState = scaffoldState) { innerPadding ->
-            ConstraintLayout(
-                Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-            ) {
-                Timber.d("Main - WeatherLoggerTheme - ConstraintLayout")
+            Timber.d("Main - WeatherLoggerTheme - Scaffold")
+            MainLayout(Modifier.padding(innerPadding), weatherDataListMapper, viewModel, validateLocationPermission)
+        }
+    }
+}
 
-                val itemList = weatherDataListMapper(LocalContext.current, viewModel.data.observeAsState(emptyList()).value)
-                val (column, button) = createRefs()
+@Composable
+fun TestLayout() {
+    Box {
+//        val lazyListState = rememberLazyListState()
+//        val coroutineScope = rememberCoroutineScope()
+//
+//        coroutineScope.launch {
+//            Timber.d("Main - WeatherLoggerTheme - Scaffold - coroutineScope")
+//            delay(3000)
+//            lazyListState.animateScrollToItem(29)
+//            delay(3000)
+//            lazyListState.animateScrollToItem(0)
+//        }
 
-                LazyColumn(
+        val scrollState = rememberScrollState()
+
+        AppColumn(
+            Modifier
+                .verticalScroll(scrollState)
+        ) {
+            repeat(10) {
+                Image(
+                    painter = rememberImagePainter(
+                        data = "https://developer.android.com/images/brand/Android_Robot.png"
+                    ),
+                    contentDescription = "Android Logo",
                     modifier = Modifier
-                        .constrainAs(column) {
-                            top.linkTo(parent.top)
-                            start.linkTo(parent.start)
-                            end.linkTo(parent.end)
-                            bottom.linkTo(button.top)
-                            width = Dimension.fillToConstraints
-                            height = Dimension.fillToConstraints
-                        }
-                ) {
-                    Timber.d("LazyColumn")
-                    items(itemList) {
-                        Timber.d("LazyColumn items - $it")
-                        WeatherRow(it)
-                    }
-                }
+                        .size(50.dp)
+                )
 
-                Button(
-                    shape = AppShape.NoCorner,
-                    modifier = Modifier
-                        .constrainAs(button) {
-                            top.linkTo(column.bottom)
-                            bottom.linkTo(parent.bottom)
-                        }
-                        .fillMaxWidth()
-                        .padding(
-                            horizontal = dimensionResource(id = R.dimen.horizontal_margin),
-                            vertical = dimensionResource(id = R.dimen.vertical_margin)
-                        ),
-                    onClick = validateLocationPermission) {
-                    Timber.d("Button")
-                    Text(
-                        text = stringResource(R.string.load).uppercase(),
-                        style = AppTextStyle.BigButton
-                    )
-                }
+                Text(
+                    "... $it \n second line \n third line",
+                    Modifier.firstBaselineToTop(100.dp)
+                )
             }
+        }
+    }
+}
+
+@Composable
+private fun MainLayout(
+    modifier: Modifier = Modifier,
+    weatherDataListMapper: WeatherDataListMapper,
+    viewModel: MainViewModel,
+    validateLocationPermission: () -> Unit
+) {
+    ConstraintLayout(
+        modifier
+            .fillMaxSize()
+    ) {
+        Timber.d("Main - WeatherLoggerTheme - ConstraintLayout")
+
+        val itemList = weatherDataListMapper(LocalContext.current, viewModel.data.observeAsState(emptyList()).value)
+        val (column, button) = createRefs()
+
+        LazyColumn(
+            modifier = Modifier
+                .constrainAs(column) {
+                    top.linkTo(parent.top)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    bottom.linkTo(button.top)
+                    width = Dimension.fillToConstraints
+                    height = Dimension.fillToConstraints
+                }
+        ) {
+            Timber.d("LazyColumn")
+            items(itemList) {
+                Timber.d("LazyColumn items - $it")
+                WeatherRow(it)
+            }
+        }
+
+        Button(
+            shape = AppShape.NoCorner,
+            modifier = Modifier
+                .constrainAs(button) {
+                    top.linkTo(column.bottom)
+                    bottom.linkTo(parent.bottom)
+                }
+                .fillMaxWidth()
+                .padding(
+                    horizontal = dimensionResource(id = R.dimen.horizontal_margin),
+                    vertical = dimensionResource(id = R.dimen.vertical_margin)
+                ),
+            onClick = validateLocationPermission) {
+            Timber.d("Button")
+            Text(
+                text = stringResource(R.string.load).uppercase(),
+                style = AppTextStyle.BigButton
+            )
         }
     }
 }
