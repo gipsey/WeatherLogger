@@ -9,6 +9,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.platform.LocalContext
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.MutableLiveData
 import edu.davidd.weatherlogger.R
@@ -38,11 +40,13 @@ class MainActivity : FragmentActivity() {
         init()
 
         setContent {
+            Timber.d("MainActivity - onCreate - setContent")
+            val weatherItems = weatherDataListMapper(LocalContext.current, viewModel.data.observeAsState(emptyList()).value)
+
             Main(
-                ::validateLocationPermission,
-                viewModel,
-                CombinedLiveData(messageLiveData, viewModel.uiMessage),
-                weatherDataListMapper
+                weatherItems = weatherItems,
+                uiMessageEvent = CombinedLiveData(messageLiveData, viewModel.uiMessage).observeAsState().value,
+                validateLocationPermission = ::validateLocationPermission
             )
         }
     }

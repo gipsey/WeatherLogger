@@ -10,7 +10,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,7 +20,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import androidx.lifecycle.LiveData
 import coil.compose.rememberImagePainter
 import edu.davidd.weatherlogger.R
 import edu.davidd.weatherlogger.framework.ui.compose.AppColumn
@@ -29,7 +27,6 @@ import edu.davidd.weatherlogger.framework.ui.compose.firstBaselineToTop
 import edu.davidd.weatherlogger.framework.ui.compose.theme.AppShape
 import edu.davidd.weatherlogger.framework.ui.compose.theme.AppTextStyle
 import edu.davidd.weatherlogger.framework.ui.compose.theme.WeatherLoggerTheme
-import edu.davidd.weatherlogger.framework.ui.model.WeatherDataListMapper
 import edu.davidd.weatherlogger.framework.ui.model.WeatherItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -37,10 +34,9 @@ import timber.log.Timber
 
 @Composable
 internal fun Main(
-    validateLocationPermission: () -> Unit,
-    viewModel: MainViewModel,
-    uiMessageLiveData: LiveData<UiEvent<UiMessage>>,
-    weatherDataListMapper: WeatherDataListMapper
+    weatherItems: List<WeatherItem>,
+    uiMessageEvent: UiEvent<UiMessage>?,
+    validateLocationPermission: () -> Unit
 ) {
     Timber.d("Main")
     WeatherLoggerTheme {
@@ -48,11 +44,15 @@ internal fun Main(
 
         val scaffoldState = rememberScaffoldState()
         val coroutineScope = rememberCoroutineScope()
-        AppSnackBar(scaffoldState.snackbarHostState, coroutineScope, uiMessageLiveData.observeAsState().value)
+        AppSnackBar(scaffoldState.snackbarHostState, coroutineScope, uiMessageEvent)
 
         Scaffold(scaffoldState = scaffoldState) { innerPadding ->
             Timber.d("Main - WeatherLoggerTheme - Scaffold")
-            MainLayout(Modifier.padding(innerPadding), weatherDataListMapper, viewModel, validateLocationPermission)
+            MainLayout(
+                Modifier.padding(innerPadding),
+                weatherItems,
+                validateLocationPermission
+            )
         }
     }
 }
@@ -99,8 +99,7 @@ fun TestLayout() {
 @Composable
 private fun MainLayout(
     modifier: Modifier = Modifier,
-    weatherDataListMapper: WeatherDataListMapper,
-    viewModel: MainViewModel,
+    weatherItems: List<WeatherItem>,
     validateLocationPermission: () -> Unit
 ) {
     ConstraintLayout(
@@ -109,7 +108,6 @@ private fun MainLayout(
     ) {
         Timber.d("Main - WeatherLoggerTheme - ConstraintLayout")
 
-        val itemList = weatherDataListMapper(LocalContext.current, viewModel.data.observeAsState(emptyList()).value)
         val (column, button) = createRefs()
 
         LazyColumn(
@@ -124,7 +122,7 @@ private fun MainLayout(
                 }
         ) {
             Timber.d("LazyColumn")
-            items(itemList) {
+            items(weatherItems) {
                 Timber.d("LazyColumn items - $it")
                 WeatherRow(it)
             }
@@ -292,10 +290,10 @@ fun AppToast(uiMessage: UiMessage?) {
 }
 
 @Composable
-fun AppSnackBar(snackbarHostState: SnackbarHostState, coroutineScope: CoroutineScope, uiMessage: UiEvent<UiMessage>?) {
-    Timber.d("AppSnackBar - $uiMessage")
+fun AppSnackBar(snackbarHostState: SnackbarHostState, coroutineScope: CoroutineScope, uiMessageEvent: UiEvent<UiMessage>?) {
+    Timber.d("AppSnackBar - $uiMessageEvent")
 
-    uiMessage?.getContentIfNotHandled()?.let {
+    uiMessageEvent?.getContentIfNotHandled()?.let {
         val message = stringResource(it.resId)
         val actionLabel = it.action?.let { stringResource(it.actionResId) }
         val context = LocalContext.current
